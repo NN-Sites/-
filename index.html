@@ -2,8 +2,15 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>יומן נסיעות מודרני</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>יומן נסיעות</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="יומן נסיעות">
+    
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/854/854878.png">
+
     <style>
         :root {
             --bg-main: #f0f6ff;
@@ -26,6 +33,7 @@
             margin: 0;
             padding: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* מונע הבהוב כחול בלחיצה באייפון */
         }
 
         body {
@@ -35,6 +43,8 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            /* מונע מתיחה וגלילה מיותרת של הדף באייפון כשמושכים למעלה/למטה */
+            overscroll-behavior: none; 
         }
 
         .phone-container {
@@ -53,6 +63,8 @@
             background: linear-gradient(135deg, var(--primary), #0076ff);
             color: white;
             padding: 20px;
+            /* מותאם למגרעת (Notch) של האייפון במצב אפליקציה */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px)); 
             text-align: center;
             font-size: 1.35rem;
             font-weight: 700;
@@ -107,7 +119,7 @@
             padding: 12px;
             border: 1px solid #d1d5db;
             border-radius: var(--radius);
-            font-size: 0.95rem;
+            font-size: 16px; /* מונע זום אוטומטי מעצבן של האייפון בעת לחיצה על שדה */
             background-color: #ffffff;
             color: var(--text-dark);
             outline: none;
@@ -198,7 +210,8 @@
             flex: 1;
             background-color: var(--bg-main);
             overflow-y: auto;
-            max-height: 60vh;
+            max-height: 65vh;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
         }
 
         .section-title {
@@ -230,11 +243,6 @@
             box-shadow: var(--shadow);
             border: 1px solid rgba(0, 0, 0, 0.02);
             transition: var(--transition);
-        }
-
-        .ride-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
         .ride-header {
@@ -494,10 +502,7 @@
         rides.push(newRide);
         saveAndRender();
         rideForm.reset();
-        
-        // החזרת ברירת המחדל של מספר נוסעים ל-1 לאחר איפוס
         document.getElementById('passengers').value = "1";
-        
         toggleForm();
     });
 
