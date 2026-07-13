@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יומן נסיעות מודרני</title>
+    <style>
+        :root {
+            --bg-main: #f0f6ff;
+            --bg-container: #ffffff;
+            --primary: #1a56db;
+            --primary-hover: #1e429f;
+            --accent-blue: #e1effe;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --success: #046c4e;
+            --success-bg: #def7ec;
+            --danger: #e02424;
+            --radius: 14px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-container);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 86, 179, 0.1);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #0076ff);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toggle-form-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-form-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-section {
+            padding: 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            outline: none;
+            transition: var(--transition);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 16px;
+            padding-left: 36px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15);
+        }
+
+        input[type="date"], input[type="time"] {
+            position: relative;
+            font-weight: 500;
+            cursor: pointer;
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 18px;
+            padding-left: 38px;
+        }
+
+        input[type="date"] {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E");
+        }
+
+        input[type="time"] {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E");
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: none;
+            height: 60px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(26, 86, 219, 0.15);
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .rides-section {
+            padding: 20px;
+            flex: 1;
+            background-color: var(--bg-main);
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .day-group {
+            margin-bottom: 24px;
+        }
+
+        .day-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            padding-right: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .ride-card {
+            background: var(--bg-container);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+        }
+
+        .ride-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .ride-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ride-client {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .ride-time {
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--accent-blue);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .ride-meta-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ride-desc {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .ride-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 10px;
+        }
+
+        .ride-price {
+            font-weight: 700;
+            color: var(--success);
+            background-color: var(--success-bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            color: var(--danger);
+            background-color: #fde8e8;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-gray);
+            padding: 40px 20px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <header>
+        <span>יומן נסיעות</span>
+        <button class="toggle-form-btn" id="toggleFormBtn" onclick="toggleForm()">+ נסיעה חדשה</button>
+    </header>
+
+    <section class="form-section" id="formSection">
+        <form id="rideForm">
+            <div class="form-group">
+                <label for="clientName">שם המזמין</label>
+                <input type="text" id="clientName" required placeholder="מיכאל כהן">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="rideDate">תאריך</label>
+                    <input type="date" id="rideDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="rideTime">שעה</label>
+                    <input type="time" id="rideTime" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="passengers">מספר נוסעים</label>
+                    <input type="number" id="passengers" required placeholder="1" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="luggage">ציוד ונפח</label>
+                    <select id="luggage" required>
+                        <option value="ללא ציוד">ללא ציוד</option>
+                        <option value="תיקי גב בלבד">תיקי גב בלבד</option>
+                        <option value="מזוודה קטנה (טרולי)">מזוודה קטנה (טרולי)</option>
+                        <option value="מזוודה גדולה">מזוודה גדולה</option>
+                        <option value="ציוד רב / עגלה">ציוד רב / עגלה</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rideDesc">תיאור נסיעה</label>
+                <textarea id="rideDesc" required placeholder="מאיפה לאיפה, עצירות בדרך..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="ridePrice">מחיר נסיעה</label>
+                <input type="number" id="ridePrice" required placeholder="₪ 0" min="0">
+            </div>
+
+            <button type="submit">שמור נסיעה ביומן</button>
+        </form>
+    </section>
+
+    <section class="rides-section">
+        <div class="section-title">הנסיעות שלי</div>
+        <div id="ridesList"></div>
+    </section>
+</div>
+
+<script>
+    const rideForm = document.getElementById('rideForm');
+    const ridesList = document.getElementById('ridesList');
+    const formSection = document.getElementById('formSection');
+    const toggleFormBtn = document.getElementById('toggleFormBtn');
+
+    let rides = JSON.parse(localStorage.getItem('rides')) || [];
+
+    function toggleForm() {
+        formSection.classList.toggle('hidden');
+        if (formSection.classList.contains('hidden')) {
+            toggleFormBtn.textContent = '+ נסיעה חדשה';
+        } else {
+            toggleFormBtn.textContent = 'סגור טופס';
+        }
+    }
+
+    function saveAndRender() {
+        rides.sort((a, b) => {
+            if (a.date !== b.date) {
+                return new Date(a.date) - new Date(b.date);
+            }
+            return a.time.localeCompare(b.time);
+        });
+
+        localStorage.setItem('rides', JSON.stringify(rides));
+        renderRides();
+    }
+
+    function formatDateHe(dateStr) {
+        const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
+        return new Date(dateStr).toLocaleDateString('he-IL', options);
+    }
+
+    function renderRides() {
+        ridesList.innerHTML = '';
+
+        if (rides.length === 0) {
+            ridesList.innerHTML = '<div class="empty-state">אין נסיעות מתוכננות ביומן.</div>';
+            return;
+        }
+
+        let currentDay = '';
+        let currentDayContainer = null;
+
+        rides.forEach((ride, index) => {
+            if (ride.date !== currentDay) {
+                currentDay = ride.date;
+                
+                const dayGroup = document.createElement('div');
+                dayGroup.className = 'day-group';
+                
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = formatDateHe(ride.date);
+                dayGroup.appendChild(dayHeader);
+                
+                ridesList.appendChild(dayGroup);
+                currentDayContainer = dayGroup;
+            }
+
+            const rideCard = document.createElement('div');
+            rideCard.className = 'ride-card';
+            rideCard.innerHTML = `
+                <div class="ride-header">
+                    <span class="ride-client">${ride.client}</span>
+                    <span class="ride-time">${ride.time}</span>
+                </div>
+                <div class="ride-meta-tags">
+                    <span class="meta-tag">👤 ${ride.passengers} נוסעים</span>
+                    <span class="meta-tag">🧳 ${ride.luggage}</span>
+                </div>
+                <div class="ride-desc">${ride.description}</div>
+                <div class="ride-footer">
+                    <span class="ride-price">₪${ride.price}</span>
+                    <button class="delete-btn" onclick="deleteRide(${index})" title="מחק נסיעה">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            currentDayContainer.appendChild(rideCard);
+        });
+    }
+
+    rideForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newRide = {
+            client: document.getElementById('clientName').value,
+            date: document.getElementById('rideDate').value,
+            time: document.getElementById('rideTime').value,
+            passengers: document.getElementById('passengers').value,
+            luggage: document.getElementById('luggage').value,
+            description: document.getElementById('rideDesc').value,
+            price: document.getElementById('ridePrice').value
+        };
+
+        rides.push(newRide);
+        saveAndRender();
+        rideForm.reset();
+        
+        // החזרת ברירת המחדל של מספר נוסעים ל-1 לאחר איפוס
+        document.getElementById('passengers').value = "1";
+        
+        toggleForm();
+    });
+
+    window.deleteRide = function(index) {
+        if(confirm('למחוק את הנסיעה הזו?')) {
+            rides.splice(index, 1);
+            saveAndRender();
+        }
+    };
+
+    renderRides();
+</script>
+
+</body>
+</html>
